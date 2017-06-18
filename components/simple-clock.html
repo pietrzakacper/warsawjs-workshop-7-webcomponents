@@ -1,0 +1,68 @@
+<template>
+  <style>
+    .container {
+      width: 600px;
+      height: 100px;
+      background: blue;
+      margin: 0 auto;
+    }
+
+    .container.red {
+      background: red;
+    }
+
+    .clock {
+      font-family: arial;
+      line-height: 100px;
+      font-size: 60px;
+      text-align: center;
+      color: white;
+    }
+  </style>
+  <div class="container">
+    <div class="clock">00:00:00</div>
+  </div>
+</template>
+
+<script>
+  class SimpleClock extends HTMLElement {
+    constructor(){
+      super();
+      this.shadow = this.attachShadow({mode: 'open'});
+      this.cacheDOM();
+    }
+    static get observedAttributes(){ return ['theme']; }
+    connectedCallback(){
+      this.runClock();
+    }
+    cacheDOM(){
+      const importDocument = document.currentScript.ownerDocument;
+      const template = importDocument.querySelector('template')
+      .content.cloneNode(true);
+      this.shadow.appendChild(template);
+
+      this.$container = this.shadow.querySelector('.container');
+      this.$clock = this.shadow.querySelector('.clock');
+    }
+    setClock(time){
+      this.$clock.textContent = time;
+    }
+    runClock(){
+      this.interval = setInterval(()=>{
+        const time = new Date();
+        const currentTime = time.toLocaleTimeString();
+        this.setClock(currentTime);
+      });
+    }
+    attributeChangedCallback(attribute, oldValue, newValue){
+      if(attribute === 'theme'){
+        this.updateTheme(newValue);
+      }
+    }
+    updateTheme(value){
+      this.$container.className = `container ${value}`;
+    }
+  }
+
+  window.customElements.define('simple-clock', SimpleClock);
+</script>

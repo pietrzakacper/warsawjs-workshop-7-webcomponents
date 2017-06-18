@@ -4,13 +4,34 @@
     <meta charset="utf-8">
     <title>Simple Clock</title>
     <script src="node_modules/webcomponents.js/webcomponents-lite.min.js"></script>
+    <link rel="import" href="./components/login-widget"/>
     <link rel="import" href="./components/simple-clock"/>
+    <link rel="import" href="./components/panel-of-destruction"/>
+    <link rel="import" href="./components/city-input"/>
+    <style media="screen">
+      body {
+        background: #111;
+      }
+    </style>
   </head>
   <body>
-    <simple-clock theme='red'/>
+    <login-widget nickname="vladimir2137"
+     profile-image="http://files.rightwingwatch.org/uploads/a_story_images/vladimir-putin_416x416.jpg"></login-widget>
+    <simple-clock theme="white"></simple-clock>
+    <simple-clock theme="blue"></simple-clock>
+    <simple-clock theme="red"></simple-clock>
+    <city-input></city-input>
+    <panel-of-destruction></panel-of-destruction>
+
     <script type="text/javascript">
-    // const clock = document.querySelector('simple-clock');
-    // clock.setAttribute('theme', 'red');
+    const $panelOfDestruction = document.querySelector('panel-of-destruction');
+    const $cityInput = document.querySelector('city-input');
+    $cityInput.addEventListener('city-name-changed', handleCityNameChange);
+
+    function handleCityNameChange(e){
+      const newName = e.detail.newName;
+      $panelOfDestruction.setAttribute('city-to-destroy', newName);
+    }
     </script>
   </body>
 </html>

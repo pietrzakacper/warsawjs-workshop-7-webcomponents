@@ -1,0 +1,43 @@
+<template>
+  <style>
+    .container {
+      width: 600px;
+      margin: 10px auto;
+      text-align: center;
+      color: white;
+    }
+    .city-text-field{
+      margin: 0 auto;
+    }
+  </style>
+  <div class="container">
+    <h3>Type city that you are willing to destroy:</h3>
+    <input class='city-text-field' placeholder="New York"/>
+  </div>
+</template>
+
+<script>
+  class CityInput extends HTMLElement {
+    constructor(){
+      super();
+      this.shadow = this.attachShadow({mode: 'open'});
+      this.cacheDOM();
+    }
+    connectedCallback(){
+      this.$input.addEventListener('input', e=>this.onInputChange(e.target.value));
+    }
+    cacheDOM(){
+      const importDocument = document.currentScript.ownerDocument;
+      const template = importDocument.querySelector('template')
+      .content.cloneNode(true);
+      this.shadow.appendChild(template);
+      this.$input = this.shadow.querySelector('input.city-text-field');
+    }
+    onInputChange(value){
+      this.dispatchEvent( new CustomEvent( 'city-name-changed',
+       { detail: {newName: value}, bubbles: false }));
+    }
+  }
+
+  window.customElements.define('city-input', CityInput);
+</script>
